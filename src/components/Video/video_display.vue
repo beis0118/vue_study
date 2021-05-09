@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import Video from '@/components/video_test'
-import SelfVedio from '@/components/selfVedio'
+import Video from '@/components/Video/video_test'
+import SelfVedio from '@/components/Video/elfVedio'
 export default {
   name: 'Home',
   components: { SelfVedio, Video }

@@ -14,20 +14,25 @@ import axios from 'axios'
 // 引入video.js
 import 'video.js/dist/video-js.css'
 
-// axios配置后台API接口根路径
+//
+import qs from "qs"
+
+Vue.use(qs)
+    // axios配置后台API接口根路径
 axios.defaults.baseURL = 'http://192.168.1.9:8081/'
 axios.interceptors.request.use(config => {
-  // 处理config的参数
-  config.headers.Authorization = window.sessionStorage.getItem('token')
-  // 在方法最后必须return config
-  return config
+    // 处理config的参数
+    config.headers.Authorization = window.sessionStorage.getItem('token')
+        // 在方法最后必须return config
+    return config
 })
-// 全局挂载axios, 直接用http即可访问
-Vue.prototype.$http = axios
 
+Vue.prototype.$http = axios
 Vue.config.productionTip = false
+Vue.prototype.$qs = qs
+
 
 new Vue({
-  router,
-  render: h => h(App)
+    router,
+    render: h => h(App)
 }).$mount('#app')

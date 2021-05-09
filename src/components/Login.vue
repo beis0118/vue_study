@@ -89,7 +89,8 @@ export default {
         if (!valid) return
         console.log(this.loginForm)
         // 保证获取值以后才进行下一步, 包含此方法最近的方法需要进行异步声明 async
-        const result = await this.$http.post('/login', this.loginForm)
+        var loginForm = this.$qs.stringify(this.loginForm)
+        const result = await this.$http.post('/user/login/', loginForm)
         console.log(result.data)
         // 检查有没有该用户
         if (result.data === 'No User!') return this.login_sign('0')

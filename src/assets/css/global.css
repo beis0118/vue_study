@@ -1,8 +1,36 @@
 /*全局样式表*/
+
 html,
 body,
 #app {
     height: 100%;
     margin: 0;
     padding: 0;
+    min-width: 1000px;
+}
+
+.el-breadcrumb {
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: red !important;
+}
+
+.el-breadcrumb__inner a,
+.el-breadcrumb__inner.is-link {
+    color: #2B2B2B;
+}
+
+.el-breadcrumb__inner {
+    color: #3C3F41;
+}
+
+.el-breadcrumb__item:last-child .el-breadcrumb__inner,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner a:hover,
+.el-breadcrumb__item:last-child .el-breadcrumb__inner:hover {
+    color: #3C3F41;
+}
+
+.el-card {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important;
 }

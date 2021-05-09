@@ -47,7 +47,7 @@ export default {
       this.player.exitFullWindow()
     },
     change_video () { // 切换视频
-      this.player.src(require('../assets/video/langzihuitou.mp4'))
+      this.player.src(require('../../assets/video/langzihuitou.mp4'))
     },
     change_volume () { // 切换音量, 0-1
       console.log(this.$data.volume)

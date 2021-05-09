@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import VideoPlayer from '@/components/VideoPlayer.vue'
+import VideoPlayer from '@/components/Video/VideoPlayer.vue'
 
 export default {
   name: 'selfVedio',
@@ -18,7 +18,7 @@ export default {
       videoOptions: {
         playbackRates: [0.5, 1, 1.5, 2],
         loop: true,
-        poster: require('../assets/cxy.jpg'),
+        poster: require('../../assets/cxy.jpg'),
         // width: '500',
         // autoplay: true,
         controls: true,
@@ -26,7 +26,7 @@ export default {
         preload: 'auto',
         sources: [
           {
-            src: require('../assets/video/茄子蛋 - 浪流连.mp4'),
+            src: require('../../assets/video/茄子蛋 - 浪流连.mp4'),
             type: 'video/mp4'
           }
         ]

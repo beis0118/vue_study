@@ -110,7 +110,7 @@ export default {
     // 从后台获取菜单列表
     async getMenuList () {
       // 解构赋值, 讲获取的数据中的data复制到res中
-      const { data: res } = await this.$http.get('menus')
+      const { data: res } = await this.$http.get('/info/menus/')
       if (res.meta.status !== 200) return this.$message.error(res.meta.status)
       // 赋值
       this.$data.menuList = res.data
