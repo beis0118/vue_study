@@ -6,6 +6,7 @@ import Home from '../components/Home'
 import Users from '../components/user/Users'
 import Rights from '../components/user/Rights'
 import selfVedio from '../components/Video/selfVedio'
+import simpleChat from '../components/Chat/simpleChat.vue'
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,11 @@ const routes = [
                 name: 'roles',
                 path: '/goods2',
                 component: Rights
+            },
+            {
+                name: 'simpleChat',
+                path: '/rights1',
+                component: simpleChat
             }
         ]
     }

@@ -1,8 +1,10 @@
-# FastAPI后台
-from typing import Optional
-from fastapi import FastAPI, Form, Header
+﻿# FastAPI后台
+from typing import Optional, List
+from fastapi import FastAPI, Form, Header, status, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import uvicorn
+from fastapi.responses import JSONResponse
 
 userList = [
     ('nio', '123123'),
@@ -164,6 +166,9 @@ origins = [
     "http://localhost",
     # vue 的url
     "http://192.168.1.9:8080",
+    "http://localhost:8080",
+    "http://192.168.1.9",
+    "http://47.117.66.221:8080",
 ]
 
 app.add_middleware(
@@ -182,6 +187,9 @@ class info(BaseModel):
 # 解决axios的post传参问题
 @app.post('/user/login/')
 async def login(username:str=Form(None),password:str=Form(None)):
+    # 服务器不支持，它应该返回一个HTTP 406响应
+    if username is None or password is None:
+        return JSONResponse(status_code=status.HTTP_406_NOT_ACCEPTABLE)
     print(username, password)
     username = username.lower()
     ret_info ={}
@@ -194,9 +202,63 @@ async def login(username:str=Form(None),password:str=Form(None)):
     return ret_info
 
 @app.get('/info/menus/')
-def menus(Authorization:Optional[str] = Header(None)):
+async def menus(Authorization:Optional[str] = Header(None)):
     # 验证token
     print(Authorization)
     if Authorization is not None:
         return menu
     return "Can't verify"
+
+# WebSocket实现持久连接(在线测试WebSocket:http://ws.douqq.com/)
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    # 接收消息
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        # 使用await + send_text发送消息
+        await websocket.send_text(f"Message text was: {data}")
+
+# 处理断开连接和多个客户端
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: List[WebSocket] = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    async def send_personal_message(self, message: str, websocket: WebSocket):
+        await websocket.send_text(message)
+
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            await connection.send_text(message)
+
+
+manager = ConnectionManager()
+
+@app.websocket("/ws/{client_id}")
+async def websocket_endpoint(websocket: WebSocket, client_id: str):
+    # 建立管理员连接, 相当于每个用户都跟管理员建立连接, 然后管理员发送给连接到管理员的所有用户
+    await manager.connect(websocket)
+    try:
+        while True:
+            # 建立连接后并保持接受消息状态
+            data = await websocket.receive_text()
+            print(data)
+            # 返回给发送用户
+            await manager.send_personal_message(f"id:{client_id}", websocket)
+            # 广播消息, 发送给所有用户
+            await manager.broadcast(f"{client_id} 说: {data}")
+    # 断开连接的时候, websocket.receive_text()会引发WebSocketDisconnect异常
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+        # 广播该信息
+        await manager.broadcast(f"Client #{client_id} left the chat")
+
+if __name__ == '__main__':
+    uvicorn.run(app, host='192.168.1.9', port=8082)

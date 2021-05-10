@@ -19,7 +19,8 @@ import qs from "qs"
 
 Vue.use(qs)
     // axios配置后台API接口根路径
-axios.defaults.baseURL = 'http://192.168.1.9:8081/'
+    // axios.defaults.baseURL = 'http://47.117.66.221:8081/'
+axios.defaults.baseURL = 'http://192.168.1.9:8082/'
 axios.interceptors.request.use(config => {
     // 处理config的参数
     config.headers.Authorization = window.sessionStorage.getItem('token')
